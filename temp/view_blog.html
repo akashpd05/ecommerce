@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Table - Online Chicken Shop</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f8f8;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Blog Posts</h1>
+
+    <table>
+
+            <tr>
+                <th>Blog Title</th>
+                <th>Blog Content</th>
+            </tr>
+         {% for i in a %}
+    <tr>
+        <td>{{ i.blog_title }}</td>
+        <td>{{ i.blog_content }}</td>
+         <td><a href="/edit_blog/{{i.id}}">edit</a></td>
+         <td><a href="/delete_blog/{{i.id}}">delete</a></td>
+    </tr>
+    {% endfor %}
+
+
+    </table>
+
+</body>
+</html>

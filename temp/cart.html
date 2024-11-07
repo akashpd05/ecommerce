@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .cart-table th, .cart-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        .cart-table th {
+            background-color: #f7f7f7;
+        }
+        .cart-table td img {
+            width: 80px;
+        }
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+        }
+        .cart-total {
+            text-align: right;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .cart-actions {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .cart-actions button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .cart-actions button:hover {
+            background-color: #45a049;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Your Shopping Cart</h1>
+
+        <!-- Cart Table -->
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+            <!-- Loop through items in the cart -->
+            {% for i in a %}
+            <tr>
+                <td>
+                    <img src="{{ i.product.image }}" alt="Product Image">
+                    <input type="hidden" value="{{i.product.id}}" name="product_id{{forloop.counter}}">
+                    <br>{{ i.product.name }}
+                </td>
+                <td>${{ i.product.our_price }}</td>
+                <td><button onclick="quantity_price_decrease({{i.product.id}})">-</button><input type="text" id="quantity{{forloop.counter}}" class="quantity-input" value="{{ i.quantity }}" min="1"><button onclick="quantity_price({{i.product.id}})">+</button></td>
+                <td>${{i.get_total}}</td>
+                <td><a href="/remove_cart/{{i.id}}" style="background-color: #f44336; color: white; border: none; padding: 8px 12px;">Remove</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Cart Total -->
+        <div class="cart-total">
+            <strong>Total: ${{ cart_total }}</strong>
+        </div>
+
+        <!-- Cart Actions -->
+        <div class="cart-actions">
+            <a href="/products/{{i.id}}" style="background-color: #4CAF50; color: white; border: none; padding: 8px 12px;">Continue Shopping</a>
+            <a href="/proceed_to_checkout/{{cart_total}}" style="background-color: #4CAF50; color: white; border: none; padding: 8px 12px;">Proceed to Checkout</a>
+
+        </div>
+    </div>
+<script>
+    function quantity_price(id){
+    window.location.href="/add_to_cart/"+id;
+
+    }
+    function quantity_price_decrease(id){
+     window.location.href="/decrease_quantity/"+id;
+    }
+</script>
+</body>
+</html>

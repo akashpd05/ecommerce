@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>checkout products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: -10px;
+        }
+
+        .col-sm-3 {
+            flex: 0 0 25%; /* 4 columns layout */
+            padding: 10px;
+        }
+
+        .card-sl {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .card-sl:hover {
+            transform: scale(1.02);
+        }
+
+        .card-image img {
+            width: 100%;
+            height: auto;
+        }
+
+        .card-action {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #e74c3c;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .card-heading {
+            font-size: 1.5em;
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+
+        .card-text {
+            margin: 5px 0;
+            color: #7f8c8d;
+        }
+
+        .card-text del {
+            color: #e74c3c; /* Strikethrough color */
+        }
+
+        .card-button {
+            display: inline-block;
+            margin: 10px 5px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        .btn-success {
+            background-color: #28a745; /* Green */
+        }
+
+        .btn-success:hover {
+            background-color: #218838; /* Darker Green */
+        }
+
+        .btn-info {
+            background-color: #17a2b8; /* Blue */
+        }
+
+        .btn-info:hover {
+            background-color: #138496; /* Darker Blue */
+        }
+    </style>
+    </head>
+<body>
+     <div class="row">
+            {% for i in b %}
+            <div class="col-sm-3">
+                <div class="card-sl">
+                    <div class="card-image">
+                        <img src="{{i.product.image}}" alt="{{i.product.name}}" />
+                    </div>
+                    <a class="card-action" href="#"><i class="fas fa-heart"></i></a>
+                    <div class="card-heading">{{i.product.name}}</div>
+                    <div class="card-text">{{i.product.description}}</div>
+                    <div class="card-text"><del>{{i.product.market_price}}</del></div>
+                    <div class="card-text">{{i.product.our_price}}</div>
+                    
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+<body>
+
+</body>
+</html>

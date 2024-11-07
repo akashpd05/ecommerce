@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Products</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e8f0f2;
+            color: #555;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 2.5em;
+            color: #2c3e50;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #dfe6e9;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        img {
+            max-width: 80px;
+            height: auto;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>View Products</h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Grams</th>
+            <th>Pieces</th>
+            <th>Serves</th>
+            <th>Market Price</th>
+            <th>Our Price</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+        {% for i in a %}
+        <tr>
+            <td>{{ i.name }}</td>
+            <td>{{ i.description }}</td>
+            <td>{{ i.grams }}</td>
+            <td>{{ i.pieces }}</td>
+            <td>{{ i.serves }}</td>
+            <td>${{ i.market_price }}</td>
+            <td>${{ i.our_price }}</td>
+            <td><img src="{{ i.image }}" alt="{{ i.name }}"></td>
+            <td>
+                <a href="/edit_products/{{ i.id }}">Edit</a> |
+                <a href="/delete_products/{{ i.id }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

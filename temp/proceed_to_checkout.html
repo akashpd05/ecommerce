@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+
+     <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            width: 40%;
+            margin: 100px auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .container:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            font-size: 16px;
+        }
+        input[type="email"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background-color: #fff;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn:active {
+            background-color: #39943f;
+        }
+        .login-actions {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .login-actions a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 10px;
+            display: inline-block;
+        }
+        .login-actions a:hover {
+            text-decoration: underline;
+        }
+        .login-actions p {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Proceed to Checkout</h2>
+{% if request.session.userid %}
+    <form id="pay" action="/process_checkout/" method="POST">{% csrf_token %}
+        <!-- Shipping Information -->
+        <h3>Shipping Details</h3>
+        <label for="fname">First Name</label>
+        <input type="text" id="fname" name="firstname" placeholder="John" required>
+
+        <label for="lname">Last Name</label>
+        <input type="text" id="lname" name="lastname" placeholder="Doe" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="example@example.com" required>
+
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="123-456-7890" required>
+
+        <label for="address">Shipping Address</label>
+        <input type="text" id="address" name="address" placeholder="1234 Main St" required>
+
+        <label for="city">City</label>
+        <input type="text" id="city" name="city" placeholder="Anytown" required>
+
+        <label for="state">State</label>
+        <input type="text" id="state" name="state" placeholder="State" required>
+
+        <label for="zip">Zip Code</label>
+        <input type="text" id="zip" name="zip" placeholder="12345" required>
+
+        <!-- Billing Information (optional if different from shipping) -->
+        <h3>Billing Details</h3>
+        <label for="same-as-shipping">
+            <input type="checkbox" id="same-as-shipping" name="same_as_shipping" checked>
+            Same as Shipping Address
+        </label>
+
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            <p>Total: $<strong>{{cart_total}}</strong></p>
+        </div>
+    <input type="hidden" name="payment_id" value="{{payment_id}}">
+      <input type="hidden" name="amount" value="{{razorpay_amount}}">
+      <input type="hidden" name="order_id" value="{{razorpay_order_id}}">
+        <input type="hidden" name="cart_total" value="{{cart_total}}">
+        <!-- Submit Button -->
+        <button type="submit" id="submit_btn" class="btn">Confirm Order</button>
+    </form>
+
+    {% else %}
+
+<div class="container">
+    <h2>Login to Proceed to Checkout</h2>
+
+    <form action="/logincheck_cart/{{cart_total}}" method="POST">{%csrf_token%}
+        <!-- Email Input -->
+        <label for="email">Username</label>
+        <input type="text" id="username" name="username"  required>
+
+        <!-- Password Input -->
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn">Login</button>
+    </form>
+
+
+
+    {% endif %}
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+
+        <script>
+            var options = {
+                "key": "{{ razorpay_merchant_key }}", // Enter the Key ID generated from the Dashboard
+                "amount": "{{ razorpay_amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "currency": "{{ currency }}",
+                "name": "test",
+                "description": "Test Transaction",
+                "image": "https://example.com/your_logo",
+                "order_id": "{{razorpay_order_id}}", //This is a sample Order ID. Pass the id obtained in the response of Step 1
+                "handler": function (response){
+                    $('#pay input[name=payment_id]').val(response.razorpay_payment_id)
+                    document.getElementById('pay').submit();
+                },
+                "prefill": {
+                    "name": "",
+                    "email": "vineethamonichan@gmail.com",
+                    "contact": "7902955231"
+                },
+                "notes": {
+                    "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                    "color": "rgb(104,222,238)"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function (response){
+                $('#myModal').modal();
+            });
+            document.getElementById('submit_btn').onclick = function(e){
+
+                rzp1.open();
+                e.preventDefault();
+            }
+        </script>
+
+</body>
+</html>
